@@ -192,8 +192,8 @@ document.addEventListener("DOMContentLoaded", () => {
         button.addEventListener("mouseenter", () => {
             if (availableUpgrades[i]) {
                 let infoPanelText: string = "";
-                infoPanelText += availableUpgrades[i].getName + "<br />";
-                infoPanelText += formatNumber(availableUpgrades[i].getBasePrice) + "<br />";
+                infoPanelText += `${availableUpgrades[i].getName}<br />`;
+                infoPanelText += `Cost: ${formatNumber(availableUpgrades[i].getBasePrice)}<br />`;
 
                 infoPanel.innerHTML = infoPanelText;
                 infoPanel.style.display = "block";
@@ -220,8 +220,6 @@ document.addEventListener("DOMContentLoaded", () => {
                 button.dispatchEvent(new MouseEvent("mouseenter"));
                 break;
             }
-
-
         });
     }
 });
