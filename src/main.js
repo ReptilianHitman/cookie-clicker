@@ -22,21 +22,24 @@ class Building {
         this.production *= multiplierMultiplier;
     }
     get toString() {
-        return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}`;
+        if (cheats)
+            return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}: ${Math.round(this.production / this.getPrice * 100000) / 100}`;
+        else
+            return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}`;
     }
     addAmount(amount) {
         this.amount += amount;
     }
 }
 class Upgrade {
-    constructor(id, name, basePrice, description, quote, condition) {
+    constructor(id, name, basePrice, description, condition, debug = false) {
         this.id = id;
         this.name = name;
         this.basePrice = basePrice;
         this.description = description;
-        this.quote = quote;
         this.condition = condition;
         this.applied = false;
+        this.debug = debug;
     }
     applyEffect() {
         switch (this.id) {
@@ -66,14 +69,14 @@ class Upgrade {
     get getDescription() {
         return this.description;
     }
-    get getQuote() {
-        return this.quote;
-    }
     get getCondition() {
         return this.condition;
     }
     get isApplied() {
         return this.applied;
+    }
+    get isDebug() {
+        return this.debug;
     }
     get isAvailable() {
         if (this.applied)
@@ -87,10 +90,12 @@ class Upgrade {
         return false;
     }
 }
+const buildingNames = ["cursor", "grandma", "farm", "mine", "factory", "bank", "temple", "wizard", "shipment", "alchemy", "portal", "time", "antimatter", "prism"];
 let cookies = 0;
 let clickMultiplier = 1;
 let cps = 0;
 let cpsMultiplier = 1;
+let cheats = false;
 const framerate = 10;
 const normalUpgradeAmount = 716;
 const debugUpgrades = 13;
@@ -108,34 +113,17 @@ document.addEventListener("DOMContentLoaded", () => {
         addCookies(clickMultiplier);
         buttonMap.get("cursor").style.visibility = "visible";
     });
-    buttonMap.get("cursor").addEventListener("click", () => {
-        buyBuilding(buildingMap.get("cursor"));
-        infoMap.set("cursor", `cursors: ${buildingMap.get("cursor").getAmount}<br />`);
-        buttonMap.get("grandma").style.visibility = "visible";
-        updateCps();
-        updateButtons();
-    });
-    buttonMap.get("grandma").addEventListener("click", () => {
-        buyBuilding(buildingMap.get("grandma"));
-        infoMap.set("grandma", `grandmas: ${buildingMap.get("grandma").getAmount}<br />`);
-        buttonMap.get("farm").style.visibility = "visible";
-        updateCps();
-        updateButtons();
-    });
-    buttonMap.get("farm").addEventListener("click", () => {
-        buyBuilding(buildingMap.get("farm"));
-        infoMap.set("farm", `farms: ${buildingMap.get("farm").getAmount}<br />`);
-        buttonMap.get("mine").style.visibility = "visible";
-        updateCps();
-        updateButtons();
-    });
-    buttonMap.get("mine").addEventListener("click", () => {
-        buyBuilding(buildingMap.get("mine"));
-        infoMap.set("mine", `mines: ${buildingMap.get("mine").getAmount}<br />`);
-        //buttonMap.get("factory")!.style.visibility = "visible";
-        updateCps();
-        updateButtons();
-    });
+    for (let i = 0; i < buildingNames.length; i++) {
+        let buildingName = buildingNames[i];
+        buttonMap.get(buildingName).addEventListener("click", () => {
+            buyBuilding(buildingMap.get(buildingName));
+            infoMap.set(buildingName, `${buildingName}: ${buildingMap.get(buildingName).getAmount}<br />`);
+            if (i + 1 < buildingNames.length)
+                buttonMap.get(buildingNames[i + 1]).style.visibility = "visible";
+            updateCps();
+            updateButtons();
+        });
+    }
     const infoPanel = document.getElementById("infoPanel");
     const upgradeButtons = Array(4);
     upgradeButtons[0] = document.getElementById("upgradeButton0");
@@ -201,10 +189,9 @@ function updateCookies() {
 function updateInfo() {
     let infoText = "";
     infoText += infoMap.get("cps");
-    infoText += infoMap.get("cursor");
-    infoText += infoMap.get("grandma");
-    infoText += infoMap.get("farm");
-    infoText += infoMap.get("mine");
+    buildingNames.forEach(buildingName => {
+        infoText += infoMap.get(buildingName);
+    });
     info.innerHTML = infoText;
 }
 function updateButtons() {
@@ -273,25 +260,34 @@ function getBuildings() {
 }
 function getButtons() {
     const buttons = new Map();
-    buttons.set("cursor", document.getElementById("cursorButton"));
-    buttons.set("grandma", document.getElementById("grandmaButton"));
-    buttons.set("farm", document.getElementById("farmButton"));
-    buttons.set("mine", document.getElementById("mineButton"));
+    buildingNames.forEach(buildingName => {
+        buttons.set(buildingName, document.getElementById(buildingName + "Button"));
+    });
     return buttons;
 }
 function getEmptyInfo() {
     let emptyInfo = new Map();
     emptyInfo.set("cps", "\n");
-    emptyInfo.set("cursor", "\n");
-    emptyInfo.set("grandma", "\n");
-    emptyInfo.set("farm", "\n");
-    emptyInfo.set("mine", "\n");
+    buildingNames.forEach(buildingName => {
+        emptyInfo.set(buildingName, "\n");
+    });
     return emptyInfo;
 }
 function getNormalUpgrades() {
     const upgrades = Array(normalUpgradeAmount);
-    upgrades[0] = new Upgrade(0, "Reinforced index finger", 100, "The mouse and cursors are twice as efficient", "prod prod", "Own 1 cursor");
-    upgrades[1] = new Upgrade(1, "Carpal tunnel prevention cream", 500, "The mouse and cursors are twice as efficient.", "it... it hurts to click...", "Own 1 cursor");
+    upgrades[0] = new Upgrade(0, "Reinforced index finger", 100, "The mouse and cursors are <b>twice</b> as efficient.<q>prod prod</q>", "Own 1 cursor");
+    upgrades[1] = new Upgrade(1, "Carpal tunnel prevention cream", 500, "The mouse and cursors are <b>twice</b> as efficient.<q>it... it hurts to click...</q>", "Own 1 cursor");
+    upgrades[2] = new Upgrade(2, "Ambidextrous", 10000, "The mouse and cursors are <b>twice</b> as efficient.<q>Look ma, both hands!</q>", "Own 10 cursors");
+    upgrades[3] = new Upgrade(3, "Thousand fingers", 100000, "The mouse and cursors gain <b>+0.1</b> cookies for each non-cursor object owned.<q>clickity</q>", "Own 25 cursors");
+    upgrades[4] = new Upgrade(4, "Million fingers", 10000000, "Multiplies the gain from Thousand fingers by <b>5</b>.<q>clickityclickity</q>", "Own 50 cursors");
+    upgrades[5] = new Upgrade(5, "Billion fingers", 100000000, "Multiplies the gain from Thousand fingers by <b>10</b>.<q>clickityclickityclickity</q>", "Own 100 cursors");
+    upgrades[6] = new Upgrade(6, "Trillion fingers", 1000000000, "Multiplies the gain from Thousand fingers by <b>20</b>.<q>clickityclickityclickityclickity</q>", "Own 150 cursors");
+    upgrades[7] = new Upgrade(7, "Forwards from grandma", 1000, "Grandmas are <b>twice</b> as efficient.<q>RE:RE:thought you'd get a kick out of this ;))</q>", "Own 1 grandma");
+    upgrades[8] = new Upgrade(8, "Steel-plated rolling pins", 5000, "Grandmas are <b>twice</b> as efficient.<q>Just what you kneaded.</q>", "Own 5 grandmas");
+    upgrades[9] = new Upgrade(9, "Lubricated dentures", 50000, "Grandmas are <b>twice</b> as efficient.<q>squish</q>", "Own 25 grandmas");
+    upgrades[10] = new Upgrade(10, "Cheap hoes", 11000, "Farms are <b>twice</b> as efficient.<q>Rake in the dough!</q>", "Own 1 farm");
+    upgrades[11] = new Upgrade(11, "Fertilizer", 55000, "Farms are <b>twice</b> as efficient.<q>It's chocolate, I swear.</q>", "Own 5 farms");
+    upgrades[12] = new Upgrade(12, "Cookie trees", 550000, "Farms are <b>twice</b> as efficient.<q>A relative of the breadfruit.</q>", "Own 25 farms");
     return upgrades;
 }
 function giveMeCookies(amount) {
