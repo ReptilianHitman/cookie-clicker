@@ -1,3 +1,4 @@
 .idea/
 compile.txt
 tsconfig.json
+src/*.ts
