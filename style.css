@@ -1,0 +1,63 @@
+button:not(:disabled) {
+    cursor: pointer;
+}
+
+button:disabled {
+    filter: grayscale(100%);
+}
+
+#clickButton {
+    font-size: 32px;
+    width: 100px;
+    height: 100px;
+}
+
+.buildingButton {
+    font-size: 24px;
+    width: 330px;
+    height: 75px;
+    visibility: hidden;
+}
+
+#buildingButtons {
+    display: flex;
+    position: fixed;
+    right: 20px;
+    top: 115px;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.upgradeButton {
+    width: 75px;
+    height: 75px;
+    visibility: hidden;
+}
+
+#upgradeButtons {
+    display: flex;
+    position: fixed;
+    right: 20px;
+    top: 20px;
+    flex-direction: row;
+    gap: 10px;
+}
+
+#cookieCount {
+    font-size: 54px;
+    position: fixed;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.infoPanel {
+    display: none;
+    position: absolute;
+    border: 1px solid black;
+    background-color: lightgray;
+    padding: 10px;
+    white-space: nowrap;
+    z-index: 1000;
+    pointer-events: none;
+}
