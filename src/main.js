@@ -36,9 +36,9 @@ class Building {
     }
     get toString() {
         if (cheats)
-            return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}: ${Math.round(this.baseProduction / this.getPrice * 100000) / 100}`;
+            return `${this.name}: ${Math.round(this.baseProduction / this.getPrice * 100000) / 100}<br />🍪 ${formatNumber(Math.ceil(this.getPrice))}`;
         else
-            return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}`;
+            return `${this.name}<br />🍪 ${formatNumber(Math.ceil(this.getPrice))}`;
     }
     addAmount(amount) {
         this.amount += amount;
