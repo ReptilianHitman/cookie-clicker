@@ -51,13 +51,34 @@ button:disabled {
     transform: translateX(-50%);
 }
 
-.infoPanel {
+#infoPanel {
     display: none;
     position: absolute;
     border: 1px solid black;
     background-color: lightgray;
     padding: 10px;
-    white-space: nowrap;
     z-index: 1000;
     pointer-events: none;
+    max-width: 200px;
+}
+
+#infoPanel q {
+    display: block;
+    text-align: right;
+}
+
+#infoPanel q::before {
+    content: "\A" open-quote;
+    white-space: pre;
+}
+
+.upgradePrice {
+    display: block;
+    text-align: right;
+}
+
+.upgradeName {
+    display: block;
+    transform: translateY(-22px);
+    max-width: 150px;
 }

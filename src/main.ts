@@ -1,16 +1,20 @@
 class Building {
     private readonly name: string;
     private readonly basePrice: number;
-    private production: number;
+    private baseProduction: number;
     private amount: number;
     private readonly upgradeMultiplier: number;
+    private baseMultiplier: number;
+    private multMult: number;
 
-    constructor(name: string, basePrice: number, production: number) {
+    constructor(name: string, basePrice: number, baseProduction: number) {
         this.name = name;
         this.basePrice = basePrice;
-        this.production = production;
+        this.baseProduction = baseProduction;
         this.amount = 0;
         this.upgradeMultiplier = 1.15;
+        this.baseMultiplier = 1;
+        this.multMult = 1;
     }
 
     get getName(): string {
@@ -22,20 +26,34 @@ class Building {
     }
 
     get getOutput() {
-        return (this.production * this.amount);
+        let addBeforeMult: number = 0;
+        let addAfterMult: number = 0;
+        let nonCursorBuildings: number = 0;
+
+        for (let i: number = 1; i < buildingNames.length; i++) {
+            nonCursorBuildings += buildingMap.get(buildingNames[i])!.getAmount;
+        }
+
+        addAfterMult += (Number(this.getName == "Cursor")) *
+            (Number(allUpgrades[3].isApplied) * 0.1 * nonCursorBuildings) *
+            (Number(allUpgrades[4].isApplied) * 4 + 1) *
+            (Number(allUpgrades[5].isApplied) * 9 + 1) *
+            (Number(allUpgrades[6].isApplied) * 19 + 1);
+
+        return ((this.baseProduction + addBeforeMult) * this.baseMultiplier * this.multMult + addAfterMult) * this.amount;
+    }
+
+    multiplyMultiplier(multiplier: number) {
+        this.multMult *= multiplier;
     }
 
     get getAmount() {
         return this.amount;
     }
 
-    multiplyProduction(multiplierMultiplier: number): void {
-        this.production *= multiplierMultiplier;
-    }
-
     get toString() {
         if (cheats)
-            return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}: ${Math.round(this.production / this.getPrice * 100000) / 100}`;
+            return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}: ${Math.round(this.baseProduction / this.getPrice * 100000) / 100}`;
         else
             return `${this.name}: ${formatNumber(Math.ceil(this.getPrice))}`;
     }
@@ -51,7 +69,7 @@ class Upgrade {
     private readonly description: string;
     private readonly condition: string;
     private applied: boolean;
-    private debug: boolean;
+    private readonly debug: boolean;
 
     constructor(id: number, name: string, basePrice: number, description: string, condition: string, debug: boolean = false) {
         this.id = id;
@@ -66,15 +84,47 @@ class Upgrade {
     applyEffect(): void {
         switch (this.id) {
             case 2:
-                addCookies(-9_400);
+                addCookies(-9_500);
             // Fall through
             case 1:
                 addCookies(-400);
             // Fall through
             case 0:
                 addCookies(-100);
-                buildingMap.get("cursor")!.multiplyProduction(2);
+                buildingMap.get("cursor")!.multiplyMultiplier(2);
                 clickMultiplier *= 2;
+                break;
+            case 3:
+                addCookies(-100_000);
+                break;
+            case 4:
+                addCookies(-10_000_000);
+                break;
+            case 5:
+                addCookies(-100_000_000);
+                break;
+            case 6:
+                addCookies(-1_000_000_000);
+                break;
+            case 9:
+                addCookies(-45_000);
+                // Fall through
+            case 8:
+                addCookies(-4_000);
+                // Fall through
+            case 7:
+                addCookies(-1_000);
+                buildingMap.get("grandma")!.multiplyMultiplier(2);
+                break;
+            case 12:
+                addCookies(-484_000);
+                // Fall through
+            case 11:
+                addCookies(-44_000);
+                // Fall through
+            case 10:
+                addCookies(-11_000);
+                buildingMap.get("farm")!.multiplyMultiplier(2);
                 break;
         }
 
@@ -116,8 +166,53 @@ class Upgrade {
         switch (this.id) {
             case 0:
             case 1:
-                if (buildingMap.get("cursor")!.getAmount > 0)
+                if (buildingMap.get("cursor")!.getAmount >= 1)
                     return true;
+                break;
+            case 2:
+                if (buildingMap.get("cursor")!.getAmount >= 10)
+                    return true;
+                break;
+            case 3:
+                if (buildingMap.get("cursor")!.getAmount >= 25)
+                    return true;
+                break;
+            case 4:
+                if (buildingMap.get("cursor")!.getAmount >= 50)
+                    return true;
+                break;
+            case 5:
+                if (buildingMap.get("cursor")!.getAmount >= 100)
+                    return true;
+                break;
+            case 6:
+                if (buildingMap.get("cursor")!.getAmount >= 150)
+                    return true;
+                break;
+            case 7:
+                if (buildingMap.get("grandma")!.getAmount >= 1)
+                    return true;
+                break;
+            case 8:
+                if (buildingMap.get("grandma")!.getAmount >= 5)
+                    return true;
+                break;
+            case 9:
+                if (buildingMap.get("grandma")!.getAmount >= 25)
+                    return true;
+                break;
+            case 10:
+                if (buildingMap.get("farm")!.getAmount >= 1)
+                    return true;
+                break;
+            case 11:
+                if (buildingMap.get("farm")!.getAmount >= 5)
+                    return true;
+                break;
+            case 12:
+                if (buildingMap.get("farm")!.getAmount >= 25)
+                    return true;
+                break;
         }
 
         return false;
@@ -144,24 +239,36 @@ const infoMap: Map<string, string> = getEmptyInfo();
 const buttonMap: Map<string, HTMLButtonElement> = getButtons();
 const buildingMap: Map<string, Building> = getBuildings();
 
-const normalUpgrades: Upgrade[] = getNormalUpgrades();
+const allUpgrades: Upgrade[] = getUpgrades();
 const availableUpgrades: Upgrade[] = [];
 
 setInterval(tick, 1000 / framerate);
 
 document.addEventListener("DOMContentLoaded", () => {
     clickButton.addEventListener("click", () => {
-        addCookies(clickMultiplier);
+        let clickAdd: number = 0;
+        let nonCursorBuildings: number = 0;
+
+        for (let i: number = 1; i < buildingNames.length; i++) {
+            nonCursorBuildings += buildingMap.get(buildingNames[i])!.getAmount;
+        }
+
+        clickAdd += (Number(allUpgrades[3].isApplied) * 0.1 * nonCursorBuildings) *
+            (Number(allUpgrades[4].isApplied) * 4 + 1) *
+            (Number(allUpgrades[5].isApplied) * 9 + 1) *
+            (Number(allUpgrades[6].isApplied) * 19 + 1);
+
+        addCookies(clickMultiplier + clickAdd);
         buttonMap.get("cursor")!.style.visibility = "visible";
     });
 
-    for (let i:number = 0; i < buildingNames.length; i++) {
+    for (let i: number = 0; i < buildingNames.length; i++) {
         let buildingName: string = buildingNames[i];
 
         buttonMap.get(buildingName)!.addEventListener("click", () => {
             buyBuilding(buildingMap.get(buildingName)!);
             infoMap.set(buildingName, `${buildingName}: ${buildingMap.get(buildingName)!.getAmount}<br />`);
-            if (i + 1 < buildingNames.length) buttonMap.get(buildingNames[i+ 1])!.style.visibility = "visible";
+            if (i + 1 < buildingNames.length) buttonMap.get(buildingNames[i + 1])!.style.visibility = "visible";
             updateCps();
             updateButtons();
         });
@@ -180,9 +287,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
         button.addEventListener("mouseenter", () => {
             if (availableUpgrades[i]) {
+                const currentUpgrade: Upgrade = availableUpgrades[i];
                 let infoPanelText: string = "";
-                infoPanelText += `${availableUpgrades[i].getName}<br />`;
-                infoPanelText += `Cost: ${formatNumber(availableUpgrades[i].getBasePrice)}<br />`;
+
+                infoPanelText += `<div class="upgradePrice">🍪 ${formatNumber(currentUpgrade.getBasePrice)}</div>`;
+                infoPanelText += `<div class="upgradeName">${currentUpgrade.getName}</div>`;
+                infoPanelText += currentUpgrade.getDescription;
 
                 infoPanel.innerHTML = infoPanelText;
                 infoPanel.style.display = "block";
@@ -199,7 +309,7 @@ document.addEventListener("DOMContentLoaded", () => {
         });
 
         button.addEventListener("click", () => {
-            for (let u of normalUpgrades) {
+            for (let u of allUpgrades) {
                 if (u !== availableUpgrades[i])
                     continue;
 
@@ -268,7 +378,7 @@ function updateButtons(): void {
 function updateAvailableUpgrades(): void {
     availableUpgrades.length = 0;
 
-    for (let u of normalUpgrades) {
+    for (let u of allUpgrades) {
         if (!u)
             continue;
 
@@ -355,7 +465,7 @@ function getEmptyInfo(): Map<string, string> {
     return emptyInfo;
 }
 
-function getNormalUpgrades(): Upgrade[] {
+function getUpgrades(): Upgrade[] {
     const upgrades: Upgrade[] = Array(normalUpgradeAmount);
 
     upgrades[0] = new Upgrade(0, "Reinforced index finger", 100, "The mouse and cursors are <b>twice</b> as efficient.<q>prod prod</q>", "Own 1 cursor");
