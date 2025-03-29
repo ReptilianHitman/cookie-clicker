@@ -7,9 +7,14 @@ button:disabled {
 }
 
 #clickButton {
-    font-size: 32px;
+    /*transform: translateX(45px) translateY(230px);*/
+    /*font-size: 220px;*/
+    transform: translateY(-20px);
+    font-size: 150px;
     width: 100px;
     height: 100px;
+    background-color: transparent;
+    border: none;
 }
 
 .buildingButton {
@@ -59,7 +64,7 @@ button:disabled {
     padding: 10px;
     z-index: 1000;
     pointer-events: none;
-    max-width: 200px;
+    max-width: 250px;
 }
 
 #infoPanel q {
