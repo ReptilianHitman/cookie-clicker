@@ -949,7 +949,35 @@ class Upgrade {
 }
 
 class Achievement {
+    private readonly id: number;
+    private readonly name: string;
+    private readonly description: string;
+    private achieved: boolean;
+    private readonly shadow: boolean;
 
+    constructor(id: number, name: string, description: string, shadow: boolean = false) {
+        this.id = id;
+        this.name = name;
+        this.description = description;
+        this.achieved = false;
+        this.shadow = shadow;
+    }
+
+    get getName() {
+        return this.name;
+    }
+
+    get getDescription() {
+        return this.description;
+    }
+
+    get isAchieved() {
+        return this.achieved;
+    }
+
+    get isShadow() {
+        return this.shadow;
+    }
 }
 
 const buildingNames: string[] = ["cursor", "grandma", "farm", "mine", "factory", "bank", "temple", "wizard", "shipment", "alchemy", "portal", "time", "antimatter", "prism"];
@@ -1359,6 +1387,115 @@ function getUpgrades(): Upgrade[] {
 function getAchievements(): Achievement[] {
     const achievements: Achievement[] = [];
 
+    achievements[0] = new Achievement(0, "Wake and bake", "Bake <b>1</b> cookie in one ascension.");
+    achievements[1] = new Achievement(1, "Making some dough", "Bake <b>1,000</b> cookies in one ascension.");
+    achievements[2] = new Achievement(2, "So baked right now", "Bake <b>100,000</b> cookies in one ascension.");
+    achievements[3] = new Achievement(3, "Fledgling bakery", "Bake <b>1 million</b> cookies in one ascension.");
+    achievements[4] = new Achievement(4, "Affluent bakery", "Bake <b>100 million</b> cookies in one ascension.");
+    achievements[5] = new Achievement(5, "World-famous bakery", "Bake <b>1 billion</b> cookie in one ascension.");
+    achievements[6] = new Achievement(6, "Cosmic bakery", "Bake <b>100 billion</b> cookie in one ascension.");
+    achievements[7] = new Achievement(7, "Galactic bakery", "Bake <b>1 trillion</b> cookie in one ascension.");
+    achievements[8] = new Achievement(8, "Universal bakery", "Bake <b>100 trillion</b> cookie in one ascension.");
+    achievements[9] = new Achievement(9, "Timeless bakery", "Bake <b>1 quadrillion</b> cookie in one ascension.");
+    achievements[10] = new Achievement(10, "Infinite bakery", "Bake <b>100 quadrillion</b> cookie in one ascension.");
+    achievements[11] = new Achievement(11, "Immortal bakery", "Bake <b>1 quintillion</b> cookie in one ascension.");
+    achievements[12] = new Achievement(12, "Don't stop me now", "Bake <b>100 quintillion</b> cookie in one ascension.");
+    achievements[13] = new Achievement(13, "You can stop me now", "Bake <b>1 sextillion</b> cookie in one ascension.");
+    achievements[14] = new Achievement(14, "Cookies all the way down", "Bake <b>100 sextillion</b> cookie in one ascension.");
+    achievements[15] = new Achievement(15, "Overdose", "Bake <b>1 septillion</b> cookie in one ascension.");
+    // achievements[] = new Achievement(, "", "Bake <b></b> cookie in one ascension.");
+    achievements[16] = new Achievement(16, "Casual baking", "Bake <b>1</b> cookie per second.");
+    achievements[17] = new Achievement(17, "Hardcore baking", "Bake <b>10</b> cookies per second.");
+    achievements[18] = new Achievement(18, "Steady tasty stream", "Bake <b>100</b> cookies per second.");
+    achievements[19] = new Achievement(19, "Cookie monster", "Bake <b>1,000</b> cookies per second.");
+    achievements[20] = new Achievement(20, "Mass producer", "Bake <b>10,000</b> cookies per second.");
+    achievements[21] = new Achievement(21, "Cookie vortex", "Bake <b>1 million</b> cookies per second.");
+    achievements[22] = new Achievement(22, "Cookie pulsar", "Bake <b>10 million</b> cookies per second.");
+    achievements[23] = new Achievement(23, "Cookie quasar", "Bake <b>100 million</b> cookies per second.");
+    achievements[24] = new Achievement(24, "Oh hey, you're still here", "Bake <b>1 billion</b> cookies per second.");
+    achievements[25] = new Achievement(25, "Let's never bake again", "Bake <b>10 billion</b> cookies per second.");
+    // achievements[] = new Achievement(, "", "Bake <b></b> cookies per second.");
+    achievements[26] = new Achievement(26, "Sacrifice", "Ascend with <b>1 million cookies</b> baked.<q>Easy come, easy go.</q>");
+    achievements[27] = new Achievement(27, "Oblivion", "Ascend with <b>1 billion cookies</b> baked.<q>Back to square one.</q>");
+    achievements[28] = new Achievement(28, "From scratch", "Ascend with <b>1 trillion cookies</b> baked.<q>It's been fun.</q>");
+    // achievements[] = new Achievement(, "", "Ascend with <b></b> baked.<q></q>");
+    achievements[29] = new Achievement(29, "Neverclick", "Make <b>1 million cookies</b> by only having clicked <b>15 times</b>.");
+    achievements[30] = new Achievement(30, "Clicktastic", "Make <b>1,000 cookies</b> cookies from clicking.");
+    achievements[31] = new Achievement(31, "Clickathlon", "Make <b>100,000 cookies</b> cookies from clicking.");
+    achievements[32] = new Achievement(32, "Clickolympics", "Make <b>10 million cookies</b> cookies from clicking.");
+    achievements[33] = new Achievement(33, "Clickorama", "Make <b>1 billion cookies</b> cookies from clicking.");
+    // achievements[] = new Achievement(, "", "Make <b></b> cookies from clicking.");
+    achievements[34] = new Achievement(34, "Click", "Have <b>1 cursors</b>.");
+    achievements[35] = new Achievement(35, "Double-click", "Have <b>2 cursors</b>.");
+    achievements[36] = new Achievement(36, "Mouse wheel", "Have <b>50 cursors</b>.");
+    achievements[37] = new Achievement(37, "Of Mice and Men", "Have <b>100 cursors</b>.");
+    achievements[38] = new Achievement(38, "The Digital", "Have <b>200 cursors</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> cursors</b>.");
+    achievements[39] = new Achievement(39, "Just wrong", "Sell a grandma.<q>I thought you loved me.</q>");
+    achievements[40] = new Achievement(40, "Grandma's cookies", "Have <b>1 grandma</b>.");
+    achievements[41] = new Achievement(41, "Sloppy kisses", "Have <b>50 grandmas</b>.");
+    achievements[42] = new Achievement(42, "Retirement home", "Have <b>100 grandmas</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> grandmas</b>.");
+    achievements[43] = new Achievement(43, "Bought the farm", "Have <b>1 farm</b>.");
+    achievements[44] = new Achievement(44, "Reap what you sow", "Have <b>50 farms</b>.");
+    achievements[45] = new Achievement(45, "Farm ill", "Have <b>100 farms</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> farms</b>.");
+    achievements[46] = new Achievement(46, "Production chain", "Have <b>1 factory</b>.");
+    achievements[47] = new Achievement(47, "Industrial revolution", "Have <b>50 factories</b>.");
+    achievements[48] = new Achievement(48, "Global warming", "Have <b>100 factories</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> factories</b>.");
+    achievements[49] = new Achievement(49, "You know the drill", "Have <b>1 mine</b>.");
+    achievements[50] = new Achievement(50, "Excavation site", "Have <b>50 mines</b>.");
+    achievements[51] = new Achievement(51, "Hollow the planet", "Have <b>100 mines</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> mines</b>.");
+    achievements[52] = new Achievement(52, "Expedition", "Have <b>1 shipment</b>.");
+    achievements[53] = new Achievement(53, "Galactic highway", "Have <b>50 shipments</b>.");
+    achievements[54] = new Achievement(54, "Far far away", "Have <b>100 shipments</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> shipments</b>.");
+    achievements[55] = new Achievement(55, "Transmutation", "Have <b>1 alchemy lab</b>.");
+    achievements[56] = new Achievement(56, "Transmogrification", "Have <b>50 alchemy labs</b>.");
+    achievements[57] = new Achievement(57, "Gold member", "Have <b>100 alchemy labs</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> alchemy labs</b>.");
+    achievements[58] = new Achievement(58, "A whole new world", "Have <b>1 portal</b>.");
+    achievements[59] = new Achievement(59, "Now you're thinking", "Have <b>50 portals</b>.");
+    achievements[60] = new Achievement(60, "Dimensional shift", "Have <b>100 portals</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> portals</b>.");
+    achievements[61] = new Achievement(61, "Time warp", "Have <b>1 time machine</b>.");
+    achievements[62] = new Achievement(62, "Alternate timeline", "Have <b>50 time machines</b>.");
+    achievements[63] = new Achievement(63, "Rewriting history", "Have <b>100 time machines</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> time machines</b>.");
+    achievements[64] = new Achievement(64, "One with everything", "Have <b>at least 1</b> of every building");
+    achievements[65] = new Achievement(65, "Mathematician", "Have at least <b>1 of the most expensive building, 2 of the second-most expensive, 4 of the next</b> and so on (capped at 128).");
+    achievements[66] = new Achievement(66, "Base 10", "Have at least <b>10 of the most expensive building, 20 of the second-most expensive, 30 of the next</b> and so on.");
+    achievements[67] = new Achievement(67, "Golden cookie", "Click a <b>golden cookie</b>.");
+    achievements[68] = new Achievement(68, "Lucky cookie", "Click <b>7 golden cookies</b>.");
+    achievements[69] = new Achievement(69, "A stroke of luck", "Click <b>27 golden cookies</b>.");
+    achievements[70] = new Achievement(70, "Cheated cookies taste awful", "Hack in some cookies.", true);
+    achievements[71] = new Achievement(71, "Uncanny clicker", "Click really, really fast.<q>Well I'll be!</q>");
+    achievements[72] = new Achievement(72, "Builder", "Own <b>100 buildings</b>.");
+    achievements[73] = new Achievement(73, "Architect", "Own <b>500 buildings</b>.");
+    achievements[74] = new Achievement(74, "Enhancer", "Purchase <b>20 upgrades</b>.");
+    achievements[75] = new Achievement(75, "Augmenter", "Purchase <b>50 upgrades</b>.");
+    achievements[76] = new Achievement(76, "Engineer", " Own <b>1,000 buildings</b>.");
+    achievements[77] = new Achievement(77, "Fortune", "Click <b>77 golden cookies</b>.");
+    achievements[78] = new Achievement(78, "True Neverclick", "Make <b>1 million</b> cookies with <b>no</b> cookie clicks.<q>This kinda defeats the whole purpose, doesn't it?</q>");
+    achievements[79] = new Achievement(79, "Elder nap", "Appease the grandmatriarchs at least <b>once</b>.<q>we<br />are<br />eternal</q>");
+    achievements[80] = new Achievement(80, "Elder slumber", "Appease the grandmatriarchs at least <b>once</b>.<br />our mind<br />outlives<br />the universe");
+    achievements[81] = new Achievement(81, "Elder", "Own at least <b>7</b> grandma types.");
+    achievements[82] = new Achievement(82, "Elder calm", "Declare a covenant with the grandmatriarchs.<q>we<br />have<br />fed</q>");
+    achievements[84] = new Achievement(84, "Leprechaun", "Click <b>777 golden cookies</b>.");
+    achievements[85] = new Achievement(85, "Black cat's paw", "Click <b>7777 golden cookies</b>.");
+    achievements[86] = new Achievement(86, "Nihilism", "Ascend with <b>1 quadrillion cookies</b> baked.<q>There are many things that needed to be erased</q>");
+    achievements[87] = new Achievement(87, "Antibatter", "Have <b>1 antimatter condenser</b>.");
+    achievements[88] = new Achievement(88, "Quirky quarks", "Have <b>50 antimatter condensers</b>.");
+    achievements[89] = new Achievement(89, "It does matter!", "Have <b>100 antimatter condensers</b>.");
+    // achievements[] = new Achievement(, "", "Have <b> antimatter condensers</b>.");
+    achievements[90] = new Achievement(90, "Upgrader", "Purchase <b>100 upgrades</b>.");
+    achievements[91] = new Achievement(91, "Centennial", "Purchase <b>100 of everything</b>.");
+    achievements[92] = new Achievement(92, "Hardcore", "Get to <b>1 billion cookies</b> baked with <b>no upgrades purchased</b>.");
+    achievements[93] = new Achievement(93, "Speed baking I", "Get to <b>1 million</b> cookies baked in <b>35 minutes</b>.");
+    achievements[94] = new Achievement(94, "Speed baking II", "Get to <b>1 million</b> cookies baked in <b>25 minutes</b>.");
+    achievements[95] = new Achievement(95, "Speed baking III", "Get to <b>1 million</b> cookies baked in <b>15 minutes</b>.");
 
     return achievements;
 }
