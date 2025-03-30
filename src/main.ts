@@ -4,8 +4,7 @@ class Building {
     private baseProduction: number;
     private amount: number;
     private readonly upgradeMultiplier: number;
-    private baseMultiplier: number;
-    private multMult: number;
+    private multiplierMultiplier: number;
 
     constructor(name: string, basePrice: number, baseProduction: number) {
         this.name = name;
@@ -13,8 +12,7 @@ class Building {
         this.baseProduction = baseProduction;
         this.amount = 0;
         this.upgradeMultiplier = 1.15;
-        this.baseMultiplier = 1;
-        this.multMult = 1;
+        this.multiplierMultiplier = 1;
     }
 
     get getName(): string {
@@ -28,9 +26,11 @@ class Building {
     get getOutput() {
         let addBeforeMult: number = 0;
         let addAfterMult: number = 0;
-        let nonCursorBuildings: number = 0;
+        let numberOfGrandmas: number = buildingMap.get("grandma")!.getAmount;
+        let nonCursorBuildings: number = numberOfGrandmas;
+        let baseMultiplier: number = 1;
 
-        for (let i: number = 1; i < buildingNames.length; i++) {
+        for (let i: number = 2; i < buildingNames.length; i++) {
             nonCursorBuildings += buildingMap.get(buildingNames[i])!.getAmount;
         }
 
@@ -40,11 +40,74 @@ class Building {
             (Number(allUpgrades[5].isApplied) * 9 + 1) *
             (Number(allUpgrades[6].isApplied) * 19 + 1);
 
-        return ((this.baseProduction + addBeforeMult) * this.baseMultiplier * this.multMult + addAfterMult) * this.amount;
+        if (this.getName == "Grandma") {
+            if (allUpgrades[69].isApplied || allUpgrades[71].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    addAfterMult += 0.02 * Number(allUpgrades[69].isApplied);
+                    addAfterMult += 0.02 * Number(allUpgrades[71].isApplied);
+                }
+            }
+
+            if (allUpgrades[73].isApplied) {
+                for (let i: number = 0; i < buildingMap.get("portal")!.getAmount; i++) {
+                    addAfterMult += 0.05;
+                }
+            }
+        } else if (this.getName == "Farm") {
+            if (allUpgrades[57].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Mine") {
+            if (allUpgrades[58].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 2) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Factory") {
+            if (allUpgrades[59].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 3) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Shipment") {
+            if (allUpgrades[60].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 7) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Alchemy Lab") {
+            if (allUpgrades[61].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 8) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Portal") {
+            if (allUpgrades[62].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 9) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Time Machine") {
+            if (allUpgrades[63].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 10) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        } else if (this.getName == "Antimatter Condenser") {
+            if (allUpgrades[103].isApplied) {
+                for (let i: number = 0; i < numberOfGrandmas; i += 11) {
+                    baseMultiplier += 0.01;
+                }
+            }
+        }
+
+        return ((this.baseProduction + addBeforeMult) * baseMultiplier * this.multiplierMultiplier + addAfterMult) * this.amount;
     }
 
-    multiplyMultiplier(multiplier: number) {
-        this.multMult *= multiplier;
+    multiplyMultiplierMultiplier(multiplierMultiplierMultiplier: number) {
+        this.multiplierMultiplier *= multiplierMultiplierMultiplier;
     }
 
     get getAmount() {
@@ -84,26 +147,22 @@ class Upgrade {
             case 0:     // Reinforced index finger
             case 1:     // Carpal tunnel prevention cream
             case 2:     // Ambidextrous
-                addCookies(-this.getPrice);
-                buildingMap.get("cursor")!.multiplyMultiplier(2);
+                buildingMap.get("cursor")!.multiplyMultiplierMultiplier(2);
                 clickMultiplier *= 2;
-                break;
-            case 3:     // Thousand fingers
-                addCookies(-this.getPrice);
-                break;
-            case 4:     // Million fingers
-                addCookies(-this.getPrice);
-                break;
-            case 5:     // Billion fingers
-                addCookies(-this.getPrice);
-                break;
-            case 6:     // Trillion fingers
-                addCookies(-this.getPrice);
                 break;
             case 7:     // Forwards from grandma
             case 8:     // Steel-plated rolling pins
             case 9:     // Lubricated dentures
             case 44:    // Prune juice
+            case 57:    // Farmer grandmas
+            case 58:    // Miner grandmas
+            case 59:    // Worker grandmas
+            case 60:    // Cosmic grandmas
+            case 61:    // Transmuted grandmas
+            case 62:    // Altered grandmas
+            case 63:    // Grandmas' grandmas
+            case 67:    // Ritual rolling pins
+            case 103:   // Antigrandmas
             case 110:   // Double-thick glasses
             case 192:   // Aging agents
             case 294:   // Xtreme walkers
@@ -115,8 +174,7 @@ class Upgrade {
             case 700:   // Visits
             case 743:   // Kitchen cabinets
             case 840:   // Foam-tipped canes
-                addCookies(-this.getPrice);
-                buildingMap.get("grandma")!.multiplyMultiplier(2);
+                buildingMap.get("grandma")!.multiplyMultiplierMultiplier(2);
                 break;
             case 10:    // Cheap hoes
             case 11:    // Fertilizer
@@ -133,8 +191,7 @@ class Upgrade {
             case 701:   // Reverse-veganism
             case 744:   // Cookie mulch
             case 841:   // Self-driving tractors
-                addCookies(-this.getPrice);
-                buildingMap.get("farm")!.multiplyMultiplier(2);
+                buildingMap.get("farm")!.multiplyMultiplierMultiplier(2);
                 break;
             case 16:    // Sugar gas
             case 17:    // Megadrill
@@ -151,8 +208,7 @@ class Upgrade {
             case 702:   // Caramel alloys
             case 745:   // Delicious mineralogy
             case 842:   // Mineshaft supports
-                addCookies(-this.getPrice);
-                buildingMap.get("mine")!.multiplyMultiplier(2);
+                buildingMap.get("mine")!.multiplyMultiplierMultiplier(2);
                 break;
             case 13:    // Sturdier conveyor belts
             case 14:    // Child labor
@@ -169,8 +225,7 @@ class Upgrade {
             case 703:   // The infinity engine
             case 746:   // N-dimensional assembly lines
             case 843:   // Universal automation
-                addCookies(-this.getPrice);
-                buildingMap.get("factory")!.multiplyMultiplier(2);
+                buildingMap.get("factory")!.multiplyMultiplierMultiplier(2);
                 break;
             case 232:   // Taller tellers
             case 233:   // Scissor-resistant credit cards
@@ -187,8 +242,7 @@ class Upgrade {
             case 704:   // Diminishing tax returns
             case 747:   // Cookie Points
             case 844:   // The big shortcake
-                addCookies(-this.getPrice);
-                buildingMap.get("bank")!.multiplyMultiplier(2);
+                buildingMap.get("bank")!.multiplyMultiplierMultiplier(2);
                 break;
             case 238:   // Golden idols
             case 239:   // Sacrifices
@@ -205,8 +259,7 @@ class Upgrade {
             case 705:   // Apparitions
             case 748:   // Negatheism
             case 845:   // Temple traps
-                addCookies(-this.getPrice);
-                buildingMap.get("temple")!.multiplyMultiplier(2);
+                buildingMap.get("temple")!.multiplyMultiplierMultiplier(2);
                 break;
             case 244:   // Pointier hats
             case 245:   // Beardlier beards
@@ -223,8 +276,7 @@ class Upgrade {
             case 706:   // Wizard basements
             case 749:   // Magical realism
             case 846:   // Polymorphism
-                addCookies(-this.getPrice);
-                buildingMap.get("wizard")!.multiplyMultiplier(2);
+                buildingMap.get("wizard")!.multiplyMultiplierMultiplier(2);
                 break;
             case 19:    // Vanilla nebulae
             case 20:    // Wormholes
@@ -241,8 +293,7 @@ class Upgrade {
             case 707:   // Prime directive
             case 750:   // Cosmic foreground radiation
             case 847:   // At your doorstep in 30 minutes or your money back
-                addCookies(-this.getPrice);
-                buildingMap.get("shipment")!.multiplyMultiplier(2);
+                buildingMap.get("shipment")!.multiplyMultiplierMultiplier(2);
                 break;
             case 22:    // Antimony
             case 23:    // Essence of dough
@@ -259,8 +310,7 @@ class Upgrade {
             case 708:   // Chromatic cycling
             case 751:   // Arcanized glassware
             case 848:   // The dose makes the poison
-                addCookies(-this.getPrice);
-                buildingMap.get("alchemy")!.multiplyMultiplier(2);
+                buildingMap.get("alchemy")!.multiplyMultiplierMultiplier(2);
                 break;
             case 25:    // Ancient tablet
             case 26:    // Insane oatling workers
@@ -277,8 +327,7 @@ class Upgrade {
             case 709:   // Domestic rifts
             case 752:   // Portal guns
             case 849:   // A way home
-                addCookies(-this.getPrice);
-                buildingMap.get("portal")!.multiplyMultiplier(2);
+                buildingMap.get("portal")!.multiplyMultiplierMultiplier(2);
                 break;
             case 28:    // Flux capacitors
             case 29:    // Time paradox resolver
@@ -295,8 +344,7 @@ class Upgrade {
             case 710:   // Patience abolished
             case 753:   // Timeproof upholstery
             case 850:   // Rectifying a mistake
-                addCookies(-this.getPrice);
-                buildingMap.get("time")!.multiplyMultiplier(2);
+                buildingMap.get("time")!.multiplyMultiplierMultiplier(2);
                 break;
             case 99:    // Sugar bosons
             case 100:   // String theory
@@ -313,8 +361,7 @@ class Upgrade {
             case 711:   // Delicious pull
             case 754:   // Employee minification
             case 851:   // Candied atoms
-                addCookies(-this.getPrice);
-                buildingMap.get("antimatter")!.multiplyMultiplier(2);
+                buildingMap.get("antimatter")!.multiplyMultiplierMultiplier(2);
                 break;
             case 175:   // Gem polish
             case 176:   // 9th color
@@ -331,8 +378,7 @@ class Upgrade {
             case 712:   // Occam's laser
             case 755:   // Hyperblack paint
             case 852:   // Lab goggles but like cool shades
-                addCookies(-this.getPrice);
-                buildingMap.get("prism")!.multiplyMultiplier(2);
+                buildingMap.get("prism")!.multiplyMultiplierMultiplier(2);
                 break;
             case 416:   // Your lucky cookie
             case 417:   // "All Bets Are Off" magic coin
@@ -349,8 +395,7 @@ class Upgrade {
             case 713:   // On a streak
             case 756:   // Silver lining maximization
             case 853:   // Gambler's fallacy fallacy
-                addCookies(-this.getPrice);
-                buildingMap.get("chance")!.multiplyMultiplier(2);
+                buildingMap.get("chance")!.multiplyMultiplierMultiplier(2);
                 break;
             case 522:   // Matebakeries
             case 523:   // Mandelbrown sugar
@@ -367,8 +412,7 @@ class Upgrade {
             case 714:   // A box
             case 757:   // Multiscale profiling
             case 854:   // The more they stay the same
-                addCookies(-this.getPrice);
-                buildingMap.get("fractal")!.multiplyMultiplier(2);
+                buildingMap.get("fractal")!.multiplyMultiplierMultiplier(2);
                 break;
             case 594:   // The JavaScript console for dummies
             case 595:   // 64bit arrays
@@ -385,8 +429,7 @@ class Upgrade {
             case 715:   // Hacker shades
             case 758:   // PHP containment vats
             case 855:   // Simulation failsafes
-                addCookies(-this.getPrice);
-                buildingMap.get("js")!.multiplyMultiplier(2);
+                buildingMap.get("js")!.multiplyMultiplierMultiplier(2);
                 break;
             case 684:   // Manifest destiny
             case 685:   // The multiverse in a nutshell
@@ -403,8 +446,7 @@ class Upgrade {
             case 716:   // Break the fifth wall
             case 759:   // Opposite universe
             case 856:   // The other routes to Rome
-                addCookies(-this.getPrice);
-                buildingMap.get("idle")!.multiplyMultiplier(2);
+                buildingMap.get("idle")!.multiplyMultiplierMultiplier(2);
                 break;
             case 730:   // Principled neural shackles
             case 731:   // Obey
@@ -421,8 +463,7 @@ class Upgrade {
             case 742:   // Every possible idea
             case 760:   // The land of dreams
             case 857:   // Intellectual property theft
-                addCookies(-this.getPrice);
-                buildingMap.get("cortex")!.multiplyMultiplier(2);
+                buildingMap.get("cortex")!.multiplyMultiplierMultiplier(2);
                 break;
             case 826:   // Cloning vats
             case 827:   // Energized nutrients
@@ -439,21 +480,21 @@ class Upgrade {
             case 838:   // One big family
             case 839:   // Fine-tuned body plans
             case 858:   // Reading your clones bedtime stories
-                addCookies(-this.getPrice);
-                buildingMap.get("you")!.multiplyMultiplier(2);
+                buildingMap.get("you")!.multiplyMultiplierMultiplier(2);
                 break;
             case 31:    // Kitten helpers
-                addCookies(-this.getPrice);
                 kittenUpgrades[0] = 0.1;
                 break;
             case 32:    // Kitten workers
-                addCookies(-this.getPrice);
                 kittenUpgrades[1] = 0.125;
+                break;
+            case 54:    // Kitten engineers
+                kittenUpgrades[2] = 0.15;
                 break;
             case 33:    // Pain cookies
             case 34:    // Sugar cookies
             case 35:    // Oatmeal raisin cookies
-                addCookies(-this.getPrice);
+            case 65:    // Specialized chocolate chips
                 cpsMultiplier += 0.01;
                 break;
             case 36:    // Peanut butter cookies
@@ -461,13 +502,90 @@ class Upgrade {
             case 38:    // White chocolate cookies
             case 39:    // Macadamia nut cookies
             case 40:    // Double-chip cookies
-                addCookies(-this.getPrice);
+            case 41:    // White chocolate macadamia nut cookies
+            case 42:    // All-chocolate cookies
+            case 66:    // Designer cocoa beans
+            case 80:    // Eclipse cookies
+            case 81:    // Zebra cookies
+            case 88:    // Snickerdoodles
+            case 89:    // Stroopwafels
+            case 90:    // Macaroons
+            case 92:    // Empire biscuits
+            case 93:    // British tea biscuits
+            case 94:    // Chocolate british tea biscuits
+            case 95:    // Round british tea biscuits
+            case 96:    // Round chocolate british tea biscuits
+            case 97:    // Round british tea biscuits with heart motif
+            case 98:    // Round chocolate british tea biscuits with heart motif
+            case 104:   // Madeleines
+            case 105:   // Palmiers
+            case 106:   // Palets
+            case 107:   // Sablés
                 cpsMultiplier += 0.02;
                 break;
+            case 68:    // Underworld ovens
+                cpsMultiplier += 0.03;
+                break;
+            case 70:    // Exotic nuts
+                cpsMultiplier += 0.04;
+                break;
+            case 72:    // Arcane sugar
+                cpsMultiplier += 0.05;
+                break;
+            case 3:     // Thousand fingers
+            case 4:     // Million fingers
+            case 5:     // Billion fingers
+            case 6:     // Trillion fingers
+            case 43:    // Quadrillion fingers
+            case 82:    // Quintillion fingers
 
+            case 75:    // Plastic mouse
+            case 76:    // Iron mouse
+            case 77:    // Titanium mouse
+            case 78:    // Adamantium mouse
+                break;
+            case 52:    // Lucky day
+            case 53:    // Serendipity
+            case 86:    // Get lucky
+                goldenCookieDurationMultiplier *= 2;
+                goldenCookieChanceMultiplier *= 2;
+                break;
+            case 55:    // Dark chocolate-coated cookies
+            case 56:    // White chocolate-coated cookies
+                cpsMultiplier += 0.05;
+                break;
+            case 64:    // Bingo center/Research facility
+                buildingMap.get("grandma")!.multiplyMultiplierMultiplier(4);
+                break;
+            case 74:    // Elder Pledge
+                addCookies(-(68 * 8 ** pledges));
+                // TODO Implement Elder Pledge
+                break;
+            case 79:    // Ultrascience
+                // TODO Make research only last 5 seconds (grandmapocalypse stuff)
+                break;
+            case 83:    // Gold hoard
+                // TODO Make golden cookies appear really often
+                break;
+            case 84:    // Elder Covenant
+                // TODO End the elders' wrath?
+                elderCovenant = 0.95;
+                break;
+            case 85:    // Revoke Elder Covenant
+                // TODO Implement the return of the grandmatriarchs????
+                elderCovenant = 1;
+                break;
+            case 87:    // Sacrificial rolling pins
+                elderPledgeDurationMinutes = 60;
+                break;
+            case 91:    // Neuromancy
+                // TODO Make all upgrades toggleable at will in the stats menu
+                break;
         }
 
+        addCookies(-this.getPrice);
         this.applied = true;
+        updateAll();
     }
 
     get getId(): number {
@@ -724,7 +842,7 @@ class Upgrade {
                 // TODO Check if 9th research project completed
                 break;
             case 74:
-                // TODO Check if "Elder Pact" purchased
+                // TODO Check if "Elder Pact" purchased and Elder Covenant not active
                 break;
             case 75:
                 if (allTimeClickedCookies >= 1_000) return true;
@@ -761,7 +879,7 @@ class Upgrade {
                 if (goldenCookiesClicked >= 77) return true;
                 break;
             case 87:
-                // TODO Check if "Elder Pledge" purchased at least ten times
+                if (pledges >= 10) return true;
                 break;
             case 88:
                 if (allTimeCookies >= 250_000_000_000) return true;
@@ -833,12 +951,17 @@ class Achievement {
 }
 
 const buildingNames: string[] = ["cursor", "grandma", "farm", "mine", "factory", "bank", "temple", "wizard", "shipment", "alchemy", "portal", "time", "antimatter", "prism"];
+const buildingLegalNames: string[] = ["Cursor", "Grandma", "Farm", "Mine", "Factory", "Bank", "Temple", "Wizard Tower", "Shipment", "Alchemy Lab", "Portal", "Time Machine", "Antimatter Condenser", "Prism"];
 
 let cookies: number = 0;
 let clickMultiplier: number = 1;
 let cps: number = 0;
 let cpsMultiplier: number = 1;
 let debug: boolean = false;
+let goldenCookieDurationMultiplier: number = 1;
+let goldenCookieChanceMultiplier: number = 1;
+let elderCovenant: number = 1;
+let elderPledgeDurationMinutes: number = 30;
 
 // All time trackers
 
@@ -877,7 +1000,13 @@ document.addEventListener("DOMContentLoaded", () => {
         clickAdd += (Number(allUpgrades[3].isApplied) * 0.1 * nonCursorBuildings) *
             (Number(allUpgrades[4].isApplied) * 4 + 1) *
             (Number(allUpgrades[5].isApplied) * 9 + 1) *
-            (Number(allUpgrades[6].isApplied) * 19 + 1);
+            (Number(allUpgrades[6].isApplied) * 19 + 1) *
+            (Number(allUpgrades[82].isApplied) * 19 + 1);
+
+        updateCps();
+
+        for (let i: number = 75; i < 79; i++)
+            clickAdd += (Number(allUpgrades[i].isApplied) * 0.01 * cps);
 
         addCookies(clickMultiplier + clickAdd);
         allTimeClickedCookies += clickMultiplier + clickAdd;
@@ -968,6 +1097,7 @@ function updateCps() {
         newCps += building.getOutput;
         newCps *= cpsMultiplier;
         newCps *= milkMultiplier();
+        newCps *= elderCovenant;
     });
 
     cps = newCps;
@@ -1027,6 +1157,14 @@ function updateAvailableUpgrades(): void {
             upgradeButton.style.visibility = "hidden";
         }
     }
+}
+
+function updateAll(): void {
+    updateCps();
+    updateCookies();
+    updateInfo();
+    updateButtons();
+    updateAvailableUpgrades();
 }
 
 function tick(): void {
@@ -1153,8 +1291,8 @@ function getUpgrades(): Upgrade[] {
     upgrades[47] = new Upgrade(47, "Ultimadrill", 600_000_000, "Mines are <b>twice</b> as efficient.<q>Pierce the heavens, etc.</q>", "Own 50 mines");
     upgrades[48] = new Upgrade(48, "Warp drive", 255_000_000_000_000, "Shipments are <b>twice</b> as efficient.<q>To boldly bake.</q>", "Own 50 shipments");
     upgrades[49] = new Upgrade(49, "Ambrosia", 3_750_000_000_000_000, "Alchemy labs are <b>twice</b> as efficient.<q>Adding this to the cookie mix is sure to make them even more addictive!<br />Perhaps dangerously so.<br />Let's hope you can keep selling these legally.</q>", "Own 50 alchemy labs");
-    // upgrades[50] = new Upgrade(50, "Sanity dance", 50_000_000_000_000_000, "Portals are <b>twice</b> as efficient.<q>We can change if we want to.<br />We can leave our brains behind.</q>", "Own 50 portals");
-    // upgrades[51] = new Upgrade(51, "Causality enforcer", 700_000_000_000_000_000, "Time machines are <b>twice</b> as efficient.<q>What happened, happened.</q>", "Own 50 time machines");
+    upgrades[50] = new Upgrade(50, "Sanity dance", /*50_000_000_000_000_000*/0, "Portals are <b>twice</b> as efficient.<q>We can change if we want to.<br />We can leave our brains behind.</q>", "Own 50 portals");
+    upgrades[51] = new Upgrade(51, "Causality enforcer", /*700_000_000_000_000_000*/0, "Time machines are <b>twice</b> as efficient.<q>What happened, happened.</q>", "Own 50 time machines");
     upgrades[52] = new Upgrade(52, "Lucky day", 777_777_777, "Golden cookies appear <b>twice as often</b> and last <b>twice as long</b> on screen.<q>Oh hey, a four-leaf penny!</q>", "7 Golden Cookies clicked");
     upgrades[53] = new Upgrade(53, "Serendipity", 77_777_777_777, "Golden cookies appear <b>twice as often</b> and last <b>twice as long</b> on screen.<q>What joy! Seven horseshoes!</q>", "27 Golden Cookies clicked");
     upgrades[54] = new Upgrade(54, "Kitten engineers", 90_000_000_000_000, "You gain <b>more CpS</b> the more milk you have.<q>meow meow meow meow, sir</q>", "50 Achievements (200% Milk)");
@@ -1172,12 +1310,12 @@ function getUpgrades(): Upgrade[] {
     upgrades[66] = new Upgrade(66, "Designer cocoa beans", 2_000_000_000_000_000, "Cookie production multiplier <b>+2%</b>.<q>Now more aerodynamic than ever!</q>", "2nd research project completed");
     upgrades[67] = new Upgrade(67, "Ritual rolling pins", 4_000_000_000_000_000, "Grandmas are <b>twice</b> as efficient.<q>The result of years of scientific research!</q>", "3rd research project completed");
     upgrades[68] = new Upgrade(68, "Underworld ovens", 8_000_000_000_000_000, "Cookie production multiplier <b>+3%</b>.<q>Powered by science, of course!</q>", "4th research project completed");
-    // upgrades[69] = new Upgrade(69, "One mind", 16_000_000_000_000_000, "Each grandma gains <b>+0.02 base Cps per grandma</b>.<q>We are one. We are many.</q>", "5th research project completed");
-    // upgrades[70] = new Upgrade(70, "Exotic nuts", 32_000_000_000_000_000, "Cookie production multiplier <b>+4%</b>.<q>You'll go crazy over these!</q>", "6th research project completed");
-    // upgrades[71] = new Upgrade(71, "Communal brainsweep", 64_000_000_000_000_000, "Each grandma gains another <b>+0.02 base Cos oer grandma</b>.<q>We fuse. We merge. We grow.</q>", "8th research project completed");
-    // upgrades[72] = new Upgrade(72, "Arcane sugar", 128_000_000_000_000_000, "Cookie production multiplier <b>+5%</b>.<q>Tastes like insects, ligaments, and molasses,</q>", "8th research project completed");
-    // upgrades[73] = new Upgrade(73, "Elder Pact", 256_000_000_000_000_000, "Each grandma gains <b>+0.05 base CpS per portal</b>.<q>squirm crawl slither writhe today we rise</q>", "9th research project completed");
-    upgrades[74] = new Upgrade(74, "Elder Pledge", 64 * 8 ** pledges, "Contains the wrath of the elders, at least for a while.<q>This is simple ritual involving anti-aging cream, cookie batter mixed in the moonlight, and a live chicken.</q>", "\"Elder Pact\" purchased");
+    upgrades[69] = new Upgrade(69, "One mind", /*16_000_000_000_000_000*/0, "Each grandma gains <b>+0.02 base Cps per grandma</b>.<q>We are one. We are many.</q>", "5th research project completed");
+    upgrades[70] = new Upgrade(70, "Exotic nuts", /*32_000_000_000_000_000*/0, "Cookie production multiplier <b>+4%</b>.<q>You'll go crazy over these!</q>", "6th research project completed");
+    upgrades[71] = new Upgrade(71, "Communal brainsweep", /*64_000_000_000_000_000*/0, "Each grandma gains another <b>+0.02 base Cos oer grandma</b>.<q>We fuse. We merge. We grow.</q>", "8th research project completed");
+    upgrades[72] = new Upgrade(72, "Arcane sugar", /*128_000_000_000_000_000*/0, "Cookie production multiplier <b>+5%</b>.<q>Tastes like insects, ligaments, and molasses,</q>", "8th research project completed");
+    upgrades[73] = new Upgrade(73, "Elder Pact", /*256_000_000_000_000_000*/0, "Each grandma gains <b>+0.05 base CpS per portal</b>.<q>squirm crawl slither writhe today we rise</q>", "9th research project completed");
+    upgrades[74] = new Upgrade(74, "Elder Pledge", 0, "Contains the wrath of the elders, at least for a while.<q>This is simple ritual involving anti-aging cream, cookie batter mixed in the moonlight, and a live chicken.</q>", "\"Elder Pact\" purchased");
     upgrades[75] = new Upgrade(75, "Plastic mouse", 50_000, "Clicking gains <b>+1% of your CpS</b>.<q>Slightly squeaky.</q>", "1,000 hand-made cookies");
     upgrades[76] = new Upgrade(76, "Iron mouse", 5_000_000, "Clicking gains <b>+1% of your CpS</b>.<q>Click like it's 1,349!</q>", "100,000 hand-made cookies");
     upgrades[77] = new Upgrade(77, "Titanium mouse", 500_000_000, "Clicking gains <b>+1% of your CpS</b>.<q>Heavy, but powerful.</q>", "10 million hand-made cookies");
@@ -1204,8 +1342,8 @@ function getUpgrades(): Upgrade[] {
     upgrades[98] = new Upgrade(98, "Round chocolate british tea biscuits with heart motif", 100_000_000_000_000, "Cookie production multiplier <b>+2%</b>.<q>I like cookies.</q>", "5 trillion cookies baked and \"Round british tea biscuits with heart motif\" purchased");
     upgrades[99] = new Upgrade(99, "Sugar bosons", 1_700_000_000_000_000, "Antimatter condensers are <b>twice</b> as efficient.<q>Sweet firm bosons.</q>", "Own 1 antimatter condenser");
     upgrades[100] = new Upgrade(100, "String theory", 8_500_000_000_000_000, "Antimatter condensers are <b>twice</b> as efficient.<q>Reveals new insight about the true meaning of baking cookies<br />(and, as a bonus, the structure of the universe).</q>", "Own 5 antimatter condensers");
-    // upgrades[101] = new Upgrade(101, "Large macaron collider", 85_000_000_000_000_000, "Antimatter condensers are <b>twice</b> as efficient.<q>How singular!</q>", "Own 25 antimatter condensers");
-    // upgrades[102] = new Upgrade(102, "Big bang bake", 8_500_000_000_000_000_000, "Antimatter condensers are <b>twice</b> as efficient.<q>And that's how it all began.</q>", "Own 50 antimatter condensers");
+    upgrades[101] = new Upgrade(101, "Large macaron collider", /*85_000_000_000_000_000*/0, "Antimatter condensers are <b>twice</b> as efficient.<q>How singular!</q>", "Own 25 antimatter condensers");
+    upgrades[102] = new Upgrade(102, "Big bang bake", /*8_500_000_000_000_000_000*/0, "Antimatter condensers are <b>twice</b> as efficient.<q>And that's how it all began.</q>", "Own 50 antimatter condensers");
     upgrades[103] = new Upgrade(103, "Antigrandmas", 8_500_000_000_000_000, "Grandmas are <b>twice</b> as efficient.<br />Antimatter condensers gain <b>+1% CpS</b> per 11 grandmas.<q>A mean antigrandma to vomit more cookies.<br />(Do not put in contact with normal grandmas; loss of matter may occur.)</q>", "15 antimatter condensers and 1 grandma owned");
     upgrades[104] = new Upgrade(104, "Madeleines", 500_000_000_000_000, "Cookie production multiplier <b>+2%</b>.<q>Unforgettable!</q>", "25 trillion cookies baked");
     upgrades[105] = new Upgrade(105, "Palmiers", 500_000_000_000_000, "Cookie production multiplier <b>+2%</b>.<q>Palmier than you!</q>", "25 trillion cookies baked");
