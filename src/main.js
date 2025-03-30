@@ -133,15 +133,6 @@ class Upgrade {
             case 8: // Steel-plated rolling pins
             case 9: // Lubricated dentures
             case 44: // Prune juice
-            case 57: // Farmer grandmas
-            case 58: // Miner grandmas
-            case 59: // Worker grandmas
-            case 60: // Cosmic grandmas
-            case 61: // Transmuted grandmas
-            case 62: // Altered grandmas
-            case 63: // Grandmas' grandmas
-            case 67: // Ritual rolling pins
-            case 103: // Antigrandmas
             case 110: // Double-thick glasses
             case 192: // Aging agents
             case 294: // Xtreme walkers
@@ -153,6 +144,15 @@ class Upgrade {
             case 700: // Visits
             case 743: // Kitchen cabinets
             case 840: // Foam-tipped canes
+            case 57: // Farmer grandmas
+            case 58: // Miner grandmas
+            case 59: // Worker grandmas
+            case 60: // Cosmic grandmas
+            case 61: // Transmuted grandmas
+            case 62: // Altered grandmas
+            case 63: // Grandmas' grandmas
+            case 103: // Antigrandmas
+            case 67: // Ritual rolling pins
                 buildingMap.get("grandma").multiplyMultiplierMultiplier(2);
                 break;
             case 10: // Cheap hoes
