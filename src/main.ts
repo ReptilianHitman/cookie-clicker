@@ -52,10 +52,7 @@ class Building {
     }
 
     get toString() {
-        if (cheats)
-            return `${this.name}: ${Math.round((this.getAmount > 0 ? this.getOutput / (this.getAmount) : this.baseProduction) / this.getPrice * 100000) / 100}<br />🍪 ${formatNumber(Math.ceil(this.getPrice))}`;
-        else
-            return `${this.name}<br />🍪 ${formatNumber(Math.ceil(this.getPrice))}`;
+        return debug ? `${this.name}: ${Math.round((this.getAmount > 0 ? this.getOutput / (this.getAmount) : this.baseProduction) / this.getPrice * 100000) / 100}<br />🍪 ${formatNumber(Math.ceil(this.getPrice))}` : `${this.name}<br />🍪 ${formatNumber(Math.ceil(this.getPrice))}`;
     }
 
     addAmount(amount: number) {
@@ -245,7 +242,7 @@ class Upgrade {
             case 750:   // Cosmic foreground radiation
             case 847:   // At your doorstep in 30 minutes or your money back
                 addCookies(-this.getPrice);
-                buildingMap.get("shipments")!.multiplyMultiplier(2);
+                buildingMap.get("shipment")!.multiplyMultiplier(2);
                 break;
             case 22:    // Antimony
             case 23:    // Essence of dough
@@ -553,7 +550,278 @@ class Upgrade {
                 if (buildingMap.get("factory")!.getAmount >= 25) return true;
                 break;
             case 16:
+                if (buildingMap.get("mine")!.getAmount >= 1) return true;
+                break;
+            case 17:
+                if (buildingMap.get("mine")!.getAmount >= 5) return true;
+                break;
+            case 18:
+                if (buildingMap.get("mine")!.getAmount >= 25) return true;
+                break;
+            case 19:
+                if (buildingMap.get("shipment")!.getAmount >= 1) return true;
+                break;
+            case 20:
+                if (buildingMap.get("shipment")!.getAmount >= 5) return true;
+                break;
+            case 21:
+                if (buildingMap.get("shipment")!.getAmount >= 25) return true;
+                break;
+            case 22:
+                if (buildingMap.get("alchemy")!.getAmount >= 1) return true;
+                break;
+            case 23:
+                if (buildingMap.get("alchemy")!.getAmount >= 5) return true;
+                break;
+            case 24:
+                if (buildingMap.get("alchemy")!.getAmount >= 25) return true;
+                break;
+            case 25:
+                if (buildingMap.get("portal")!.getAmount >= 1) return true;
+                break;
+            case 26:
+                if (buildingMap.get("portal")!.getAmount >= 5) return true;
+                break;
+            case 27:
+                if (buildingMap.get("portal")!.getAmount >= 25) return true;
+                break;
+            case 28:
+                if (buildingMap.get("time")!.getAmount >= 1) return true;
+                break;
+            case 29:
+                if (buildingMap.get("time")!.getAmount >= 5) return true;
+                break;
+            case 30:
+                if (buildingMap.get("time")!.getAmount >= 25) return true;
+                break;
+            case 31:
+                if (achievementsEarnedAmount >= 13) return true;
+                break;
+            case 32:
+                if (achievementsEarnedAmount >= 25) return true;
+                break;
+            case 33:
+                if (allTimeCookies >= 50_000) return true;
+                break;
+            case 34:
+                if (allTimeCookies >= 250_000) return true;
+                break;
+            case 35:
+                if (allTimeCookies >= 500_000) return true;
+                break;
+            case 36:
+                if (allTimeCookies >= 2_500_000) return true;
+                break;
+            case 37:
+                if (allTimeCookies >= 5_000_000) return true;
+                break;
+            case 38:
+                if (allTimeCookies >= 25_000_000) return true;
+                break;
+            case 39:
+                if (allTimeCookies >= 5_000_000) return true;
+                break;
+            case 40:
+                if (allTimeCookies >= 250_000_000) return true;
+                break;
+            case 41:
+                if (allTimeCookies >= 500_000_000) return true;
+                break;
+            case 42:
+                if (allTimeCookies >= 2_500_000_000) return true;
+                break;
+            case 43:
+                if (buildingMap.get("cursor")!.getAmount >= 200) return true;
+                break;
+            case 44:
+                if (buildingMap.get("grandma")!.getAmount >= 50) return true;
+                break;
+            case 45:
+                if (buildingMap.get("farm")!.getAmount >= 50) return true;
+                break;
+            case 46:
+                if (buildingMap.get("factory")!.getAmount >= 50) return true;
+                break;
+            case 47:
                 if (buildingMap.get("mine")!.getAmount >= 50) return true;
+                break;
+            case 48:
+                if (buildingMap.get("shipment")!.getAmount >= 50) return true;
+                break;
+            case 49:
+                if (buildingMap.get("alchemy")!.getAmount >= 50) return true;
+                break;
+            case 50:
+                if (buildingMap.get("portal")!.getAmount >= 50) return true;
+                break;
+            case 51:
+                if (buildingMap.get("time")!.getAmount >= 50) return true;
+                break;
+            case 52:
+                if (goldenCookiesClicked >= 7) return true;
+                break;
+            case 53:
+                if (goldenCookiesClicked >= 27) return true;
+                break;
+            case 54:
+                if (achievementsEarnedAmount >= 50) return true;
+                break;
+            case 55:
+                if (allTimeCookies >= 5_000_000_000) return true;
+                break;
+            case 56:
+                if (allTimeCookies >= 5_000_000_000) return true;
+                break;
+            case 57:
+                if (buildingMap.get("farm")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 58:
+                if (buildingMap.get("mine")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 59:
+                if (buildingMap.get("factory")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 60:
+                if (buildingMap.get("shipment")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 61:
+                if (buildingMap.get("alchemy")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 62:
+                if (buildingMap.get("portal")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 63:
+                if (buildingMap.get("time")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 64:
+                // TODO Check if "Elder" achievement earned (use its index when it's implemented) and own at least 6 grandmas
+                break;
+            case 65:
+                // TODO Check if 1st research project completed
+                break;
+            case 66:
+                // TODO Check if 2nd research project completed
+                break;
+            case 67:
+                // TODO Check if 3rd research project completed
+                break;
+            case 68:
+                // TODO Check if 4th research project completed
+                break;
+            case 69:
+                // TODO Check if 5th research project completed
+                break;
+            case 70:
+                // TODO Check if 6th research project completed
+                break;
+            case 71:
+                // TODO Check if 7th research project completed
+                break;
+            case 72:
+                // TODO Check if 8th research project completed
+                break;
+            case 73:
+                // TODO Check if 9th research project completed
+                break;
+            case 74:
+                // TODO Check if "Elder Pact" purchased
+                break;
+            case 75:
+                if (allTimeClickedCookies >= 1_000) return true;
+                break;
+            case 76:
+                if (allTimeClickedCookies >= 100_000) return true;
+                break;
+            case 77:
+                if (allTimeClickedCookies >= 10_000_000) return true;
+                break;
+            case 78:
+                if (allTimeClickedCookies >= 1_000_000_000) return true;
+                break;
+            case 79:
+                return debug;
+            case 80:
+                if (allTimeCookies >= 25_000_000_000) return true;
+                break;
+            case 81:
+                if (allTimeCookies >= 50_000_000_000) return true;
+                break;
+            case 82:
+                if (buildingMap.get("cursor")!.getAmount >= 250) return true;
+                break;
+            case 83:
+                return debug;
+            case 84:
+                // TODO Check if "Elder Pledge" purchased at least once
+                break;
+            case 85:
+                // TODO Check if "Elder Pledge" purchased at least once
+                break;
+            case 86:
+                if (goldenCookiesClicked >= 77) return true;
+                break;
+            case 87:
+                // TODO Check if "Elder Pledge" purchased at least ten times
+                break;
+            case 88:
+                if (allTimeCookies >= 250_000_000_000) return true;
+                break;
+            case 89:
+                if (allTimeCookies >= 500_000_000_000) return true;
+                break;
+            case 90:
+                if (allTimeCookies >= 2_500_000_000_000) return true;
+                break;
+            case 91:
+                return debug;
+            case 92:
+                if (allTimeCookies >= 5_000_000_000_000) return true;
+                break;
+            case 93:
+                // TODO Check if "Tin of british tea biscuits" purchased
+                break;
+            case 94:
+                // TODO Check if "British tea biscuits" purchased
+                break;
+            case 95:
+                // TODO Check if "Chocolate british tea biscuits" purchased
+                break;
+            case 96:
+                // TODO Check if "Round british tea biscuits" purchased
+                break;
+            case 97:
+                // TODO Check if "Round chocolate british tea biscuits" purchased
+                break;
+            case 98:
+                // TODO Check if "Round british tea biscuits with heart motif" purchased
+                break;
+            case 99:
+                if (buildingMap.get("antimatter")!.getAmount >= 1) return true;
+                break;
+            case 100:
+                if (buildingMap.get("antimatter")!.getAmount >= 5) return true;
+                break;
+            case 101:
+                if (buildingMap.get("antimatter")!.getAmount >= 25) return true;
+                break;
+            case 102:
+                if (buildingMap.get("antimatter")!.getAmount >= 50) return true;
+                break;
+            case 103:
+                if (buildingMap.get("antimatter")!.getAmount >= 15 && buildingMap.get("grandma")!.getAmount >= 1) return true;
+                break;
+            case 104:
+                if (allTimeCookies >= 25_000_000_000_000) return true;
+                break;
+            case 105:
+                if (allTimeCookies >= 25_000_000_000_000) return true;
+                break;
+            case 106:
+                if (allTimeCookies >= 50_000_000_000_000) return true;
+                break;
+            case 107:
+                if (allTimeCookies >= 50_000_000_000_000) return true;
+                break;
         }
 
         return false;
@@ -566,13 +834,19 @@ class Achievement {
 
 const buildingNames: string[] = ["cursor", "grandma", "farm", "mine", "factory", "bank", "temple", "wizard", "shipment", "alchemy", "portal", "time", "antimatter", "prism"];
 
-let cookies: number = 0
+let cookies: number = 0;
 let clickMultiplier: number = 1;
 let cps: number = 0;
 let cpsMultiplier: number = 1;
-let cheats: boolean = false;
+let debug: boolean = false;
+
+// All time trackers
+
 let pledges: number = 0;
 let achievementsEarnedAmount: number = 0;
+let allTimeCookies: number = 0;
+let allTimeClickedCookies: number = 0;
+let goldenCookiesClicked: number = 0;
 
 const framerate = 10;
 
@@ -606,6 +880,7 @@ document.addEventListener("DOMContentLoaded", () => {
             (Number(allUpgrades[6].isApplied) * 19 + 1);
 
         addCookies(clickMultiplier + clickAdd);
+        allTimeClickedCookies += clickMultiplier + clickAdd;
         buttonMap.get("cursor")!.style.visibility = "visible";
     });
 
@@ -629,7 +904,7 @@ document.addEventListener("DOMContentLoaded", () => {
     upgradeButtons[2] = document.getElementById("upgradeButton2") as HTMLButtonElement;
     upgradeButtons[3] = document.getElementById("upgradeButton3") as HTMLButtonElement;
 
-    for (let i: number = 0; i < 3; i++) {
+    for (let i: number = 0; i < 4; i++) {
         const button: HTMLButtonElement = upgradeButtons[i];
 
         button.addEventListener("mouseenter", () => {
@@ -680,6 +955,7 @@ function buyBuilding(building: Building, amount: number = 1) {
 function addCookies(deltaCookies: number): void {
     if (deltaCookies < 0) console.log(deltaCookies);
     cookies += deltaCookies;
+    allTimeCookies += deltaCookies;
     updateCookies();
     updateButtons();
     updateAvailableUpgrades();
