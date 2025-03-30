@@ -973,7 +973,7 @@ let allTimeCookies: number = 0;
 let allTimeClickedCookies: number = 0;
 let goldenCookiesClicked: number = 0;
 
-const framerate = 10;
+const framerate = 30;
 
 const clickButton = document.getElementById("clickButton") as HTMLButtonElement;
 const cookieCount = document.getElementById("cookieCount") as HTMLLabelElement;
