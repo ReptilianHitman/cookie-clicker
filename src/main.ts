@@ -61,44 +61,44 @@ class Building {
             }
         } else if (this.getName == "Mine") {
             if (allUpgrades[58].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 2) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 2;
                 }
             }
         } else if (this.getName == "Factory") {
             if (allUpgrades[59].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 3) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 3;
                 }
             }
         } else if (this.getName == "Shipment") {
             if (allUpgrades[60].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 7) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 7;
                 }
             }
         } else if (this.getName == "Alchemy Lab") {
             if (allUpgrades[61].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 8) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 8;
                 }
             }
         } else if (this.getName == "Portal") {
             if (allUpgrades[62].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 9) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 9;
                 }
             }
         } else if (this.getName == "Time Machine") {
             if (allUpgrades[63].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 10) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 10;
                 }
             }
         } else if (this.getName == "Antimatter Condenser") {
             if (allUpgrades[103].isApplied) {
-                for (let i: number = 0; i < numberOfGrandmas; i += 11) {
-                    baseMultiplier += 0.01;
+                for (let i: number = 0; i < numberOfGrandmas; i++) {
+                    baseMultiplier += 0.01 / 11;
                 }
             }
         }
@@ -1097,13 +1097,14 @@ function updateCps() {
 
     buildingMap.forEach(building => {
         newCps += building.getOutput;
-        newCps *= cpsMultiplier;
-        newCps *= milkMultiplier();
-        newCps *= elderCovenant;
     });
 
+    newCps *= cpsMultiplier;
+    newCps *= milkMultiplier();
+    newCps *= elderCovenant;
+
     cps = newCps;
-    infoMap.set("cps", `cookies/s: ${formatNumber(Math.round(cps * 10) / 10)}<br />`);
+    infoMap.set("cps", `cookies/s: ${Math.round(cps * 10) / 10}<br />`);
     updateInfo();
 }
 
@@ -1177,7 +1178,7 @@ function formatNumber(num: number): string {
     if (num < 10000)
         return num.toString();
 
-    let e = 0;
+    let e: number = 0;
 
     while (num >= 10000) {
         e++;
